@@ -61,7 +61,12 @@ export GOPATH=/home/vagrant/gopath
 # and it will correctly compile <package> and install it into
 # /home/vagrant/gopath/bin.
 sudo -u vagrant go get github.com/tools/godep && sudo -u vagrant go install github.com/tools/godep
-sudo -u vagrant go get github.com/coreos/etcd && sudo -u vagrant go install github.com/coreos/etcd
+
+sudo -u vagrant go get github.com/coreos/etcd 
+cd $GOPATH/src/github.com/coreos/etcd
+git checkout tags/v0.4.6
+
+sudo -u vagrant go install github.com/coreos/etcd
 echo "Complete."
 
 echo "Setup complete."
