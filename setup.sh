@@ -28,15 +28,15 @@ echo "Complete."
 echo "Creating /etc/profile.d/k8s.sh to set GOPATH, KUBERNETES_PROVIDER and other config..."
 cat >/etc/profile.d/k8s.sh << 'EOL'
 # Golang setup.
-export GOPATH=~/gopath
-export PATH=$PATH:~/gopath/bin
+export GOPATH=~/go
+export PATH=$PATH:~/go/bin
 # So you can start using cluster/kubecfg.sh right away.
 export KUBERNETES_PROVIDER=local
 # So you can access apiserver from your host machine.
 export API_HOST=10.245.1.2
 
 # For convenience.
-alias k="cd ~/gopath/src/github.com/GoogleCloudPlatform/kubernetes"
+alias k="cd ~/go/src/github.com/GoogleCloudPlatform/kubernetes"
 alias killcluster="ps axu|grep -e go/bin -e etcd |grep -v grep | awk '{print $2}' | xargs kill"
 alias kstart="k && killcluster; hack/local-up-cluster.sh"
 EOL
@@ -48,18 +48,22 @@ echo "127.0.0.1 localhost" >> /etc/hosts
 mkdir /var/lib/kubelet
 
 # The NFS mount is initially owned by root - it should be owned by vagrant.
-chown vagrant.vagrant /home/vagrant/gopath
+chown vagrant.vagrant /home/vagrant/go
 
 echo "Complete."
 
 
 echo "Installing godep and etcd..."
-export GOPATH=/home/vagrant/gopath
+export GOPATH=/home/vagrant/go
 # Go will compile on both Mac OS X and Linux, but it will create different
 # compilation artifacts on the two platforms. By mounting only GOPATH's src
 # directory into the VM, you can run `go install <package>` on the Fedora VM
 # and it will correctly compile <package> and install it into
 # /home/vagrant/gopath/bin.
+mkdir -p $GOPATH/src/github.com/GoogleCloudPlatform/
+cd $GOPATH/src/github.com/GoogleCloudPlatform/
+git clone git@github.com:GoogleCloudPlatform/kubernetes.git
+
 sudo -u vagrant go get github.com/tools/godep && sudo -u vagrant go install github.com/tools/godep
 
 sudo -u vagrant go get github.com/coreos/etcd 
