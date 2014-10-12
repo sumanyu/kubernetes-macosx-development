@@ -9,7 +9,7 @@ echo "Installing system tools and docker..."
 yum -y install yum-fastestmirror git mercurial subversion docker-io
 # Docker setup.
 # /usr/bin/docker -d -H 10.245.1.2:2375 -H unix:///var/run/docker.sock &
-sed -i "s|fd://|10.245.1.2:2375 -H unix:///var/run/docker.sock|" /lib/systemd/system/docker.service
+sed -i "s|fd://|10.1.2.3:2375 -H unix:///var/run/docker.sock|" /lib/systemd/system/docker.service
 systemctl start docker 
 systemctl enable docker
 # Supposedly you don't have to do this starting docker 1.0
@@ -73,9 +73,26 @@ mkdir -p $GOPATH/src/github.com/GoogleCloudPlatform/
 cd $GOPATH/src/github.com/GoogleCloudPlatform/
 git clone https://github.com/GoogleCloudPlatform/kubernetes.git
 
-cd ~/go
+cd /home/vagrant/go
 
 chown -R vagrant.vagrant .
+
+echo
+echo "Adding Zookeeper..."
+docker pull jplock/zookeeper
+
+echo
+echo "Adding Kafka..."
+docker pull wurstmeister/kafka
+
+echo
+echo "Adding Cassandra..."
+docker pull poklet/cassandra
+docker pull poklet/opscenter
+
+echo
+echo "Adding usergrid..."
+docker pull sumanyu/docker-usergrid
 
 # sudo -u vagrant go get github.com/tools/godep && sudo -u vagrant go install github.com/tools/godep
 
