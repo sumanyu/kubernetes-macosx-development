@@ -8,7 +8,9 @@ echo "Installing system tools and docker..."
 # Source control tools are so go get works properly.
 yum -y install yum-fastestmirror git mercurial subversion docker-io
 # Docker setup.
-systemctl start docker
+# /usr/bin/docker -d -H 10.245.1.2:2375 -H unix:///var/run/docker.sock &
+sed -i "s|fd://|10.245.1.2:2375 -H unix:///var/run/docker.sock|" /lib/systemd/system/docker.service
+systemctl start docker 
 systemctl enable docker
 # Supposedly you don't have to do this starting docker 1.0
 # (Fedora 20 is currently 1.1.2) but I found it necessary.
@@ -34,7 +36,7 @@ export PATH=$PATH:~/go/bin
 # So you can start using cluster/kubecfg.sh right away.
 export KUBERNETES_PROVIDER=local
 # So you can access apiserver from your host machine.
-export API_HOST=10.245.1.2
+export API_HOST=10.1.2.3
 
 # For convenience.
 alias k="cd ~/go/src/github.com/GoogleCloudPlatform/kubernetes"
@@ -70,6 +72,10 @@ go install github.com/coreos/etcd
 mkdir -p $GOPATH/src/github.com/GoogleCloudPlatform/
 cd $GOPATH/src/github.com/GoogleCloudPlatform/
 git clone https://github.com/GoogleCloudPlatform/kubernetes.git
+
+cd ~/go
+
+chown -R vagrant.vagrant .
 
 # sudo -u vagrant go get github.com/tools/godep && sudo -u vagrant go install github.com/tools/godep
 

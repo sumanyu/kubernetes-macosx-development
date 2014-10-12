@@ -12,6 +12,7 @@ require 'fileutils'
 $vb_gui = false
 $vb_memory = 1024
 $vb_cpus = 1
+$vb_name = "docker-vm"
 
 if File.exist?(CONFIG)
   require CONFIG
@@ -24,13 +25,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |c|
     config.vm.box = "fedora20"
     config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_fedora-20_chef-provisionerless.box"
 
-    ip = "10.245.1.2"
+    ip = "10.1.2.3"
     config.vm.network :private_network, ip: ip
 
     config.vm.provider :virtualbox do |vb|
       vb.gui = $vb_gui
       vb.memory = $vb_memory
       vb.cpus = $vb_cpus
+      vb.name = $vb_name
     end
 
     config.vm.provision "shell", inline: "/vagrant/setup.sh"
