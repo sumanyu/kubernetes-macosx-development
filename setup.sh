@@ -24,6 +24,7 @@ ln -s /usr/local/go/bin/* /usr/bin/
 rm $GOBINARY
 echo "Complete."
 
+mkdir /home/vagrant/go
 
 echo "Creating /etc/profile.d/k8s.sh to set GOPATH, KUBERNETES_PROVIDER and other config..."
 cat >/etc/profile.d/k8s.sh << 'EOL'
@@ -60,17 +61,18 @@ export GOPATH=/home/vagrant/go
 # directory into the VM, you can run `go install <package>` on the Fedora VM
 # and it will correctly compile <package> and install it into
 # /home/vagrant/gopath/bin.
-mkdir -p $GOPATH/src/github.com/GoogleCloudPlatform/
-cd $GOPATH/src/github.com/GoogleCloudPlatform/
-git clone git@github.com:GoogleCloudPlatform/kubernetes.git
-
-sudo -u vagrant go get github.com/tools/godep && sudo -u vagrant go install github.com/tools/godep
-
-sudo -u vagrant go get github.com/coreos/etcd 
+go get github.com/coreos/etcd
 cd $GOPATH/src/github.com/coreos/etcd
 git checkout tags/v0.4.6
 
-sudo -u vagrant go install github.com/coreos/etcd
+go install github.com/coreos/etcd
+
+mkdir -p $GOPATH/src/github.com/GoogleCloudPlatform/
+cd $GOPATH/src/github.com/GoogleCloudPlatform/
+git clone https://github.com/GoogleCloudPlatform/kubernetes.git
+
+# sudo -u vagrant go get github.com/tools/godep && sudo -u vagrant go install github.com/tools/godep
+
 echo "Complete."
 
 echo "Setup complete."
