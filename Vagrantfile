@@ -9,7 +9,7 @@ CONFIG = File.join(File.dirname(__FILE__), "config.rb")
 require 'fileutils'
 
 # Defaults for config options defined in CONFIG
-$gopath = ""
+# $gopath = ""
 $expose_docker_tcp = true
 $vb_gui = false
 $vb_memory = 1024
@@ -20,9 +20,9 @@ if File.exist?(CONFIG)
 end
 
 # If $gopath was not set in the config but the environment variable exists, grab it.
-if $gopath.empty? && ENV["GOPATH"]
-  $gopath = ENV["GOPATH"]
-end
+# if $gopath.empty? && ENV["GOPATH"]
+#   $gopath = ENV["GOPATH"]
+# end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |c|
   c.vm.define vm_name = "k8s-env" do |config|
@@ -38,10 +38,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |c|
       config.vm.network "forwarded_port", guest: 2375, host: 2375, auto_correct: true
     end
 
-    unless $gopath.empty?
-      $gopath_src_dir = File.join($gopath, "/src")
-      config.vm.synced_folder $gopath_src_dir, "/home/vagrant/gopath/src", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
-    end
+    # unless $gopath.empty?
+    #   $gopath_src_dir = File.join($gopath, "/src")
+    #   config.vm.synced_folder $gopath_src_dir, "/home/vagrant/gopath/src", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+    # end
 
     config.vm.provider :virtualbox do |vb|
       vb.gui = $vb_gui
